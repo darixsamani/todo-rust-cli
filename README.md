@@ -1,225 +1,130 @@
-# 📝 Todo CLI
+<div align="center">
 
-A lightweight and efficient command-line todo manager built with **Rust**. Manage your daily tasks directly from your terminal with simple commands, persistent JSON storage, and colored output.
+# 📝 todo-rust-cli
 
-The project demonstrates practical Rust programming concepts, including structs, enums, pattern matching, error handling, file I/O, and serialization.
+**A fast, minimal todo manager for your terminal, written in Rust.**
+
+![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)
+![Cargo](https://img.shields.io/badge/Cargo-CE412B?style=for-the-badge&logo=rust&logoColor=white)
+![Clap](https://img.shields.io/badge/clap-CLI-blue?style=for-the-badge)
+![Serde](https://img.shields.io/badge/serde__json-JSON-orange?style=for-the-badge)
+![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+</div>
+
+---
 
 ## ✨ Features
 
-- **Task Management:** Add, complete, list, and delete tasks.
-- **JSON Persistence:** Automatically saves tasks in `~/.todos.json`.
-- **Colored Terminal Output:** Easily distinguish completed and pending tasks.
-- **Command-Line Interface:** Simple and intuitive commands powered by Clap.
-- **Safe Error Handling:** Zero `unwrap()` calls in the main application logic.
-- **Lightweight:** Fast execution with a minimal dependency footprint.
+- ➕ Add, ✅ complete, 📋 list and 🗑️ delete tasks from the command line
+- 💾 Persistent storage as JSON in `~/.todos.json`
+- 🎨 Colored output: pending and completed tasks are visually distinct
+- 🛡️ Robust error handling: **zero `unwrap()`** in the main logic
+- 🦀 Idiomatic Rust: structs, enums, pattern matching, `Result`-based flow
 
-## 🛠️ Built With
-
-![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)
-![Clap](https://img.shields.io/badge/Clap-CLI-orange?style=for-the-badge)
-![Serde](https://img.shields.io/badge/Serde-Serialization-green?style=for-the-badge)
-![JSON](https://img.shields.io/badge/JSON-Data%20Storage-black?style=for-the-badge)
-![Cargo](https://img.shields.io/badge/Cargo-Package%20Manager-DEA584?style=for-the-badge&logo=rust&logoColor=white)
-
-### Core Technologies
-
-| Technology | Purpose |
-|---|---|
-| Rust | Main programming language |
-| Clap | Command-line argument parsing |
-| Serde | Data serialization and deserialization |
-| Serde JSON | JSON file persistence |
-| Cargo | Project and dependency management |
-
-## 📦 Installation
-
-### Prerequisites
-
-- [Rust](https://www.rust-lang.org/tools/install)
-- Cargo (included with Rust)
-
-### Clone the repository
+## 🚀 Installation
 
 ```bash
 git clone https://github.com/darixsamani/todo-rust-cli.git
 cd todo-rust-cli
-```
-
-### Build the project
-
-```bash
-cargo build --release
-```
-
-### Run the application
-
-```bash
-cargo run -- add "Learn Rust"
-```
-
-You can also install the compiled binary locally:
-
-```bash
 cargo install --path .
 ```
 
-After installation, use the `todo` command directly from your terminal.
-
-## 🚀 Usage
-
-Todo CLI provides four main commands.
-
-### 1. Add a task
-
-Create a new todo item:
+Or run it without installing:
 
 ```bash
-todo add "Learn ownership"
+cargo run -- <command>
 ```
 
-Example output:
+> [!NOTE]
+> Requires Rust 1.70+ ([install via rustup](https://rustup.rs)).
 
-```text
+## 📖 Usage
+
+```console
+$ todo add "Learn ownership"
 ✅ Added: Learn ownership (#1)
-```
 
-### 2. List all tasks
-
-Display all your tasks:
-
-```bash
-todo list
-```
-
-Example output:
-
-```text
+$ todo list
   1. [ ] Learn ownership
-  2. [x] Build a CLI application
-  3. [ ] Practice Rust pattern matching
-```
 
-Pending tasks and completed tasks are displayed with different colors.
-
-### 3. Complete a task
-
-Mark a task as completed using its ID:
-
-```bash
-todo done 1
-```
-
-Example output:
-
-```text
+$ todo done 1
 🎉 Completed!
 ```
 
-### 4. Delete a task
+### Commands
 
-Remove a task using its ID:
+| Command | Description | Example |
+|---------|-------------|---------|
+| `add <title>` | Add a new task | `todo add "Learn ownership"` |
+| `list` | Show all tasks | `todo list` |
+| `done <id>` | Mark a task as completed | `todo done 1` |
+| `delete <id>` | Remove a task | `todo delete 1` |
 
-```bash
-todo delete 1
-```
+Run `todo --help` for the full CLI reference.
 
-Example output:
+## 💾 Data Storage
 
-```text
-🗑️ Deleted task #1
-```
-
-## 💾 Data Persistence
-
-Your tasks are stored locally in a JSON file:
-
-```text
-~/.todos.json
-```
-
-Example data structure:
+Tasks are stored as JSON in `~/.todos.json`. The file is created automatically on first use.
 
 ```json
 [
-  {
-    "id": 1,
-    "title": "Learn ownership",
-    "completed": false
-  },
-  {
-    "id": 2,
-    "title": "Build a CLI application",
-    "completed": true
-  }
+  { "id": 1, "title": "Learn ownership", "done": true },
+  { "id": 2, "title": "Read the Rust Book", "done": false }
 ]
 ```
 
-The application automatically loads existing tasks when executed and saves changes to the JSON file.
+> [!TIP]
+> The file is plain JSON, so you can back it up, sync it, or edit it by hand.
 
-Your tasks remain available between application sessions.
-
-## 🧠 Rust Concepts Demonstrated
-
-This project provides practical experience with fundamental Rust concepts:
-
-| Concept | Application |
-|---|---|
-| Structs | Representing todo tasks |
-| Enums | Modeling CLI commands and application states |
-| Pattern Matching | Handling different commands and task states |
-| Ownership & Borrowing | Managing task data safely |
-| Error Handling | Handling file and serialization errors |
-| File I/O | Reading and writing JSON files |
-| Serialization | Converting Rust structures into JSON |
-| Collections | Managing multiple todo items |
-
-## 📁 Project Structure
+## 🗂️ Project Structure
 
 ```text
 todo-rust-cli/
 ├── Cargo.toml
-├── Cargo.lock
-├── README.md
 └── src/
-    └── main.rs
+    └── main.rs      # CLI parsing, commands, persistence
 ```
 
-*This is a suggested initial structure; it can be expanded as the project grows.*
+## 🧠 Rust Concepts Demonstrated
 
-## 🎯 Project Goals
+| Concept | Where it is used |
+|---------|------------------|
+| **Structs** | `Todo` model (id, title, done) |
+| **Enums** | `Commands` subcommands parsed by clap |
+| **Pattern matching** | Dispatching commands, handling `Result` / `Option` |
+| **File I/O** | Reading and writing `~/.todos.json` |
+| **serde_json** | (De)serializing tasks |
+| **Error handling** | `Result` and `?` instead of `unwrap()` |
 
-The main goal is to apply fundamental Rust concepts by building a practical command-line application.
+## 🛠️ Built With
 
-Specific objectives:
+| Crate | Purpose |
+|-------|---------|
+| [clap](https://crates.io/crates/clap) | Command-line argument parsing |
+| [serde](https://crates.io/crates/serde) / [serde_json](https://crates.io/crates/serde_json) | JSON serialization |
+| [colored](https://crates.io/crates/colored) | Terminal colors |
 
-- Understand how to build CLI applications with Clap.
-- Practice defining and using structs and enums.
-- Become comfortable with Rust pattern matching.
-- Learn how to read and write files.
-- Understand JSON serialization and deserialization.
-- Practice robust error handling without relying on `unwrap()` in the main logic.
+## 🧪 Development
 
-## 🔮 Possible Future Improvements
+```bash
+cargo build           # compile
+cargo test            # run tests
+cargo clippy          # lint
+cargo fmt             # format
+```
 
-- [ ] Add task priorities (Low, Medium, High).
-- [ ] Add due dates and reminders.
-- [ ] Support task editing.
-- [ ] Add filtering by completion status.
-- [ ] Add task search.
-- [ ] Support exporting and importing tasks.
-- [ ] Add unit and integration tests.
-- [ ] Organize the application into multiple modules.
+## 🗺️ Roadmap
+
+- [ ] `edit` command to rename a task
+- [ ] Due dates and priorities
+- [ ] `list --pending` / `--done` filters
+- [ ] Custom storage path via env variable
 
 ## 🤝 Contributing
 
-Contributions, suggestions, and improvements are welcome!
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Push your branch.
-5. Open a Pull Request.
+Issues and pull requests are welcome. Please run `cargo fmt` and `cargo clippy` before submitting.
 
 ## 📄 License
 
-This project is under MIT Licence
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for details.
