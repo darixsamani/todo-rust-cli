@@ -1,4 +1,7 @@
+use std::fs;
+
 use clap::{Parser, Subcommand};
+use serde::{Serialize, Deserialize};
 
 
 #[derive(Parser)]
@@ -7,6 +10,12 @@ struct Cli {
     #[clap(subcommand)]
     command: Command,
 }
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct Todo{
+    id: u32,
+    name: String,
+    is_completed: bool
+}
 
 #[derive(Subcommand)]
 enum Command {
@@ -14,16 +23,43 @@ enum Command {
     List,
     Done { id: u32 },
 }
-
 fn main() {
     let cli = Cli::parse();
 
     match cli.command {
         Command::Add { task } => {
-            println!("Adding task: {}", task);
+
+            let content = fs::read_to_string("todos.json")
+                .unwrap_or_else(|_| "[]".to_string());
+
+            let mut todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
+
+            let todo = Todo {
+                id: todos.len() as u32 + 1,
+                name: task,
+                is_completed: false
+            };
+            todos.push(todo.clone());
+            fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
+            println!("✅ Added: {} (#{})", todo.name, todos.len());
+
+            
         }
         Command::List => {
-            println!("Listing tasks...");
+            let content = fs::read_to_string("todos.json")
+                .unwrap_or_else(|_| "[]".to_string());
+
+            let todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
+
+            if todos.is_empty() {
+                println!("No tasks found.");
+            } else {
+                println!("Tasks:");
+                for todo in todos {
+                    let status = if todo.is_completed { "✅" } else { "❌" };
+                    println!("{} {}: {}", status, todo.id, todo.name);
+                }
+            }
         }
         Command::Done { id } => {
             println!("Marking task as done: {}", id);
