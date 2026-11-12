@@ -62,7 +62,20 @@ fn main() {
             }
         }
         Command::Done { id } => {
-            println!("Marking task as done: {}", id);
+            let content = fs::read_to_string("todos.json")
+                .unwrap_or_else(|_| "[]".to_string());
+
+            let mut todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
+
+            for todo in &mut todos {
+                if todo.id == id {
+                    todo.is_completed = true;
+                    break;
+                }
+            }
+
+            fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
+            println!("✅ Task marked as done: {}", id);
         }
     }
 }
