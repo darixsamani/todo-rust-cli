@@ -66,7 +66,7 @@ fn main() {
 
             let mut todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
 
-            if (todos.len() != 0 && id < todos.len() as u32) {
+            if (!todos.is_empty() && id < todos.len() as u32) {
                 for todo in &mut todos {
                     if todo.id == id {
                         todo.done = true;
@@ -85,7 +85,7 @@ fn main() {
 
             let mut todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
 
-            if (todos.len() != 0 && id < todos.len() as u32) {
+            if (!todos.is_empty() && id < todos.len() as u32) {
                 for todo in &mut todos {
                     if todo.id == id {
                         todo.name = task;
