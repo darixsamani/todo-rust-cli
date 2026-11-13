@@ -23,16 +23,22 @@ struct Todo {
 
 #[derive(Subcommand)]
 enum Command {
-    Add { task: String },
-    List{
+    Add {
+        task: String,
+    },
+    List {
         #[clap(long, help = "Show only pending tasks")]
         pending: bool,
         #[clap(long, help = "Show only done tasks")]
-        done: bool
+        done: bool,
     },
-    Done { id: u32 },
-    Edit { id: u32, task: String },
-
+    Done {
+        id: u32,
+    },
+    Edit {
+        id: u32,
+        task: String,
+    },
 }
 fn main() {
     let cli = Cli::parse();
@@ -62,8 +68,6 @@ fn main() {
             } else {
                 println!("Tasks:");
                 for todo in &todos {
-
-                
                     let should_display = if pending && done {
                         true
                     } else if pending {
@@ -74,10 +78,10 @@ fn main() {
                         true
                     };
 
-                if should_display {
-                    let status = if todo.done { "✅" } else { "❌" };
-                    println!("{} {}: {}", status, todo.id, todo.name);
-                }
+                    if should_display {
+                        let status = if todo.done { "✅" } else { "❌" };
+                        println!("{} {}: {}", status, todo.id, todo.name);
+                    }
                 }
             }
         }
