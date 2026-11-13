@@ -14,7 +14,7 @@ struct Cli {
 struct Todo{
     id: u32,
     name: String,
-    is_completed: bool
+    done: bool
 }
 
 #[derive(Subcommand)]
@@ -37,7 +37,7 @@ fn main() {
             let todo = Todo {
                 id: todos.len() as u32 + 1,
                 name: task,
-                is_completed: false
+                done: false
             };
             todos.push(todo.clone());
             fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
@@ -56,7 +56,7 @@ fn main() {
             } else {
                 println!("Tasks:");
                 for todo in todos {
-                    let status = if todo.is_completed { "✅" } else { "❌" };
+                    let status = if todo.done { "✅" } else { "❌" };
                     println!("{} {}: {}", status, todo.id, todo.name);
                 }
             }
@@ -67,15 +67,21 @@ fn main() {
 
             let mut todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
 
-            for todo in &mut todos {
-                if todo.id == id {
-                    todo.is_completed = true;
-                    break;
+            if (todos.len()!=0 && id< todos.len() as u32){
+                for todo in &mut todos {
+                    if todo.id == id {
+                        todo.done = true;
+                        break;
+                    }
                 }
+
+                fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
+                println!("✅ Task marked as done: {}", id);
+            } else {
+                eprintln!("Task is empty or id {} doesn't exist", id);
             }
 
-            fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
-            println!("✅ Task marked as done: {}", id);
+            
         }
     }
 }
