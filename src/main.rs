@@ -1,20 +1,24 @@
 use std::fs;
 
 use clap::{Parser, Subcommand};
-use serde::{Serialize, Deserialize};
-
+use serde::{Deserialize, Serialize};
 
 #[derive(Parser)]
-#[clap(name = "todo", version = "0.1.0", author = "Darix SAMANI SIEW", about = "Rust-powered command-line todo manager with JSON persistence")]
+#[clap(
+    name = "todo",
+    version = "0.1.0",
+    author = "Darix SAMANI SIEW",
+    about = "Rust-powered command-line todo manager with JSON persistence"
+)]
 struct Cli {
     #[clap(subcommand)]
     command: Command,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct Todo{
+struct Todo {
     id: u32,
     name: String,
-    done: bool
+    done: bool,
 }
 
 #[derive(Subcommand)]
@@ -22,32 +26,28 @@ enum Command {
     Add { task: String },
     List,
     Done { id: u32 },
+    edit { id: u32, task: String },
 }
 fn main() {
     let cli = Cli::parse();
 
     match cli.command {
         Command::Add { task } => {
-
-            let content = fs::read_to_string("todos.json")
-                .unwrap_or_else(|_| "[]".to_string());
+            let content = fs::read_to_string("todos.json").unwrap_or_else(|_| "[]".to_string());
 
             let mut todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
 
             let todo = Todo {
                 id: todos.len() as u32 + 1,
                 name: task,
-                done: false
+                done: false,
             };
             todos.push(todo.clone());
             fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
             println!("✅ Added: {} (#{})", todo.name, todos.len());
-
-            
         }
         Command::List => {
-            let content = fs::read_to_string("todos.json")
-                .unwrap_or_else(|_| "[]".to_string());
+            let content = fs::read_to_string("todos.json").unwrap_or_else(|_| "[]".to_string());
 
             let todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
 
@@ -62,12 +62,11 @@ fn main() {
             }
         }
         Command::Done { id } => {
-            let content = fs::read_to_string("todos.json")
-                .unwrap_or_else(|_| "[]".to_string());
+            let content = fs::read_to_string("todos.json").unwrap_or_else(|_| "[]".to_string());
 
             let mut todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
 
-            if (todos.len()!=0 && id< todos.len() as u32){
+            if (todos.len() != 0 && id < todos.len() as u32) {
                 for todo in &mut todos {
                     if todo.id == id {
                         todo.done = true;
@@ -80,8 +79,25 @@ fn main() {
             } else {
                 eprintln!("Task is empty or id {} doesn't exist", id);
             }
+        }
+        Command::edit { id, task } => {
+            let content = fs::read_to_string("todos.json").unwrap_or_else(|_| "[]".to_string());
 
-            
+            let mut todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
+
+            if (todos.len() != 0 && id < todos.len() as u32) {
+                for todo in &mut todos {
+                    if todo.id == id {
+                        todo.name = task;
+                        break;
+                    }
+                }
+
+                fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
+                println!("✅ Task edited: {}", id);
+            } else {
+                eprintln!("Task is empty or id {} doesn't exist", id);
+            }
         }
     }
 }
