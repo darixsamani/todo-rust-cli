@@ -24,9 +24,15 @@ struct Todo {
 #[derive(Subcommand)]
 enum Command {
     Add { task: String },
-    List,
+    List{
+        #[clap(long, help = "Show only pending tasks")]
+        pending: bool,
+        #[clap(long, help = "Show only done tasks")]
+        done: bool
+    },
     Done { id: u32 },
     Edit { id: u32, task: String },
+
 }
 fn main() {
     let cli = Cli::parse();
@@ -46,7 +52,7 @@ fn main() {
             fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
             println!("✅ Added: {} (#{})", todo.name, todos.len());
         }
-        Command::List => {
+        Command::List { pending, done } => {
             let content = fs::read_to_string("todos.json").unwrap_or_else(|_| "[]".to_string());
 
             let todos: Vec<Todo> = serde_json::from_str(&content).unwrap_or_default();
@@ -55,9 +61,23 @@ fn main() {
                 println!("No tasks found.");
             } else {
                 println!("Tasks:");
-                for todo in todos {
+                for todo in &todos {
+
+                
+                    let should_display = if pending && done {
+                        true
+                    } else if pending {
+                        !todo.done
+                    } else if done {
+                        todo.done
+                    } else {
+                        true
+                    };
+
+                if should_display {
                     let status = if todo.done { "✅" } else { "❌" };
                     println!("{} {}: {}", status, todo.id, todo.name);
+                }
                 }
             }
         }
