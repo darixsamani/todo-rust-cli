@@ -116,7 +116,7 @@ cargo fmt             # format
 
 ## 🗺️ Roadmap
 
-- [ ] `edit` command to rename a task
+- [x] `edit` command to rename a task
 - [ ] Due dates and priorities
 - [ ] `list --pending` / `--done` filters
 - [ ] Custom storage path via env variable
