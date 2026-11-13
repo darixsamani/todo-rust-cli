@@ -96,7 +96,7 @@ fn main() {
                 fs::write("todos.json", serde_json::to_string_pretty(&todos).unwrap()).unwrap();
                 println!("✅ Task edited: {}", id);
             } else {
-                eprintln!("Task is empty or id {} doesn't exist", id);
+                eprintln!("Task is empty or id {} doesn't exists", id);
             }
         }
     }
