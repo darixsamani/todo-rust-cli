@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 #[clap(
     name = "todo",
     version = "0.1.0",
-    author = "Darix SAMANI SIEW",
+    author = "Darix SAMANI SIEWE",
     about = "Rust-powered command-line todo manager with JSON persistence"
 )]
 struct Cli {
