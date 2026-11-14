@@ -119,7 +119,7 @@ cargo fmt             # format
 - [x] `edit` command to rename a task
 - [ ] Due dates and priorities
 - [x] `list --pending` / `--done` filters
-- [ ] Custom storage path via env variable
+- [x] Custom storage path via env variable
 
 ## 🤝 Contributing
 
